@@ -1,16 +1,28 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, render_template_string
 from flask_cors import CORS
 from rembg import remove
 from PIL import Image
 import io
 import base64
+import os
 
 app = Flask(__name__)
 CORS(app)
 
 @app.route('/')
 def home():
-    return 'Background Remover API is running!'
+    with open('index.html', 'r') as f:
+        return f.read()
+
+@app.route('/style.css')
+def css():
+    with open('style.css', 'r') as f:
+        return f.read(), 200, {'Content-Type': 'text/css'}
+
+@app.route('/script.js')
+def js():
+    with open('script.js', 'r') as f:
+        return f.read(), 200, {'Content-Type': 'application/javascript'}
 
 @app.route('/remove-background', methods=['POST'])
 def remove_background():
@@ -32,4 +44,6 @@ def remove_background():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    import os
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
