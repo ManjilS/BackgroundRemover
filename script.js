@@ -41,7 +41,7 @@ class BackgroundRemover {
         this.processBtn.disabled = true;
 
         try {
-            const response = await fetch('http://localhost:5000/remove-background', {
+            const response = await fetch('/remove-background', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
